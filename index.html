@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Smart Waste Classifier – Snap your waste, instantly know the right bin">
+  <meta name="theme-color" content="#22c55e">
+  <title>Smart Waste Classifier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Onboarding Overlay -->
+  <div id="onboarding" class="onboarding" aria-hidden="false">
+    <div class="onboarding-slides">
+      <div class="slide active" data-slide="0">
+        <div class="slide-icon" aria-hidden="true">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+        </div>
+        <h1>Snap your waste, instantly know the bin</h1>
+        <p>Point your camera at any waste item and get clear sorting guidance in seconds.</p>
+      </div>
+      <div class="slide" data-slide="1">
+        <div class="slide-icon" aria-hidden="true">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <h1>Get prep tips and upcycling ideas</h1>
+        <p>Learn how to prepare items correctly and discover creative ways to give them a second life.</p>
+      </div>
+      <div class="slide" data-slide="2">
+        <div class="slide-icon" aria-hidden="true">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <h1>Privacy first</h1>
+        <p>Photos are processed for analysis only. Nothing is stored permanently by default.</p>
+      </div>
+    </div>
+    <div class="onboarding-dots" role="tablist" aria-label="Onboarding progress">
+      <button class="dot active" data-slide="0" aria-label="Slide 1"></button>
+      <button class="dot" data-slide="1" aria-label="Slide 2"></button>
+      <button class="dot" data-slide="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="onboarding-actions">
+      <button id="onboarding-next" class="btn btn-primary">Next</button>
+      <button id="onboarding-skip" class="btn btn-ghost">Skip</button>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div id="app" class="app" hidden>
+    <!-- Header -->
+    <header class="app-header">
+      <h1 id="header-title">Hi, ready to sort?</h1>
+      <button id="theme-toggle" class="icon-btn" aria-label="Toggle dark mode">
+        <svg class="icon-sun" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"/>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+        <svg class="icon-moon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" hidden>
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Screens -->
+    <main class="screens">
+      <!-- SCAN / HOME -->
+      <section id="screen-scan" class="screen active" aria-label="Scan">
+        <div class="scan-hero">
+          <button id="btn-scan" class="scan-card" aria-label="Scan Waste">
+            <div class="scan-card-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                <circle cx="12" cy="13" r="4"/>
+              </svg>
+            </div>
+            <span class="scan-card-title">Scan Waste</span>
+            <span class="scan-card-sub">Point camera at one item</span>
+          </button>
+          <button id="btn-gallery" class="btn btn-secondary btn-block">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <path d="M21 15l-5-5L5 21"/>
+            </svg>
+            From Gallery
+          </button>
+        </div>
+
+        <div class="section">
+          <h2 class="section-title">Bin Color Guide</h2>
+          <div class="bin-guide">
+            <div class="bin-item" data-bin="green">
+              <span class="bin-swatch green"></span>
+              <span class="bin-label">Organic</span>
+            </div>
+            <div class="bin-item" data-bin="blue">
+              <span class="bin-swatch blue"></span>
+              <span class="bin-label">Paper</span>
+            </div>
+            <div class="bin-item" data-bin="yellow">
+              <span class="bin-swatch yellow"></span>
+              <span class="bin-label">Plastic / Metal / Glass</span>
+            </div>
+            <div class="bin-item" data-bin="red">
+              <span class="bin-swatch red"></span>
+              <span class="bin-label">Hazardous</span>
+            </div>
+            <div class="bin-item" data-bin="grey">
+              <span class="bin-swatch grey"></span>
+              <span class="bin-label">Residual</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section tip-of-day">
+          <div class="tip-card">
+            <span class="tip-icon" aria-hidden="true">💡</span>
+            <div>
+              <strong>Tip of the Day</strong>
+              <p id="tip-text">Rinse plastic containers before recycling to avoid contaminating the batch.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CAMERA -->
+      <section id="screen-camera" class="screen" aria-label="Camera" hidden>
+        <div class="camera-container">
+          <video id="camera-preview" autoplay playsinline muted></video>
+          <canvas id="camera-canvas" hidden></canvas>
+          <div class="camera-overlay">
+            <div class="guide-frame">
+              <span class="guide-text">Place one object in the center</span>
+            </div>
+          </div>
+          <div class="camera-controls">
+            <button id="btn-flash" class="icon-btn" aria-label="Toggle flash">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+              </svg>
+            </button>
+            <button id="btn-shutter" class="shutter-btn" aria-label="Capture photo"></button>
+            <button id="btn-gallery-cam" class="icon-btn" aria-label="Open gallery">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <path d="M21 15l-5-5L5 21"/>
+              </svg>
+            </button>
+          </div>
+          <p class="camera-hint">Make sure lighting is good</p>
+        </div>
+        <button id="btn-close-camera" class="btn-close-cam" aria-label="Close camera">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </section>
+
+      <!-- PHOTO REVIEW -->
+      <section id="screen-review" class="screen" aria-label="Photo Review" hidden>
+        <div class="review-container">
+          <img id="review-image" alt="Captured waste photo">
+          <div class="review-actions">
+            <button id="btn-retake" class="btn btn-secondary">Retake</button>
+            <button id="btn-analyze" class="btn btn-primary">Analyze</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- LOADING -->
+      <section id="screen-loading" class="screen" aria-label="Analyzing" hidden>
+        <div class="loading-container">
+          <div class="skeleton-card"></div>
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line short"></div>
+          <p class="loading-text">Analyzing material…</p>
+        </div>
+      </section>
+
+      <!-- RESULT -->
+      <section id="screen-result" class="screen" aria-label="Analysis Result" hidden>
+        <div class="result-container">
+          <div class="result-header">
+            <h2 id="result-object-name">Object Name</h2>
+            <span id="result-confidence" class="confidence-badge">High confidence</span>
+          </div>
+
+          <div id="result-bin-card" class="bin-color-card">
+            <div class="bin-color-swatch"></div>
+            <div class="bin-color-info">
+              <span id="result-category" class="bin-category">Category</span>
+              <span id="result-material" class="bin-material">Material</span>
+            </div>
+            <div class="bin-icon" id="result-bin-icon"></div>
+          </div>
+
+          <div class="result-section">
+            <h3>Preparation Tips</h3>
+            <ul id="result-tips" class="tips-list"></ul>
+          </div>
+
+          <div class="result-section fun-fact-card">
+            <span class="fun-fact-icon" aria-hidden="true">💡</span>
+            <p id="result-fun-fact"></p>
+          </div>
+
+          <div class="result-section">
+            <h3>Upcycling Ideas</h3>
+            <div id="result-ideas" class="ideas-list"></div>
+          </div>
+
+          <div id="result-safety" class="safety-note" hidden></div>
+
+          <div class="result-actions">
+            <button id="btn-save" class="btn btn-primary">Save</button>
+            <button id="btn-scan-again" class="btn btn-secondary">Scan Again</button>
+            <button id="btn-correct" class="btn btn-ghost">Not this?</button>
+            <button id="btn-share" class="btn btn-ghost">Share</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- HISTORY -->
+      <section id="screen-history" class="screen" aria-label="History" hidden>
+        <div class="history-header">
+          <div class="filter-group">
+            <select id="filter-category" aria-label="Filter by category">
+              <option value="all">All categories</option>
+              <option value="Organic Waste">Organic</option>
+              <option value="Paper & Cardboard">Paper</option>
+              <option value="Plastic">Plastic</option>
+              <option value="Glass">Glass</option>
+              <option value="Metal">Metal</option>
+              <option value="E-Waste">E-Waste</option>
+              <option value="Hazardous Waste">Hazardous</option>
+              <option value="Textile">Textile</option>
+              <option value="Residual/Other">Residual</option>
+            </select>
+          </div>
+        </div>
+        <div id="history-list" class="history-list"></div>
+        <div id="history-empty" class="empty-state" hidden>
+          <p>No scans yet. Start by scanning your first waste item.</p>
+          <button class="btn btn-primary" data-goto="scan">Scan Waste</button>
+        </div>
+      </section>
+
+      <!-- EXPLORE -->
+      <section id="screen-explore" class="screen" aria-label="Explore" hidden>
+        <div class="section">
+          <h2 class="section-title">Bin Color Guide</h2>
+          <div class="explore-bins">
+            <article class="explore-bin-card" data-color="green">
+              <span class="bin-swatch green large"></span>
+              <h3>Green – Organic</h3>
+              <p>Food scraps, leaves, garden waste. Compostable materials only.</p>
+            </article>
+            <article class="explore-bin-card" data-color="blue">
+              <span class="bin-swatch blue large"></span>
+              <h3>Blue – Paper & Cardboard</h3>
+              <p>Newspapers, magazines, clean cardboard boxes. Keep dry.</p>
+            </article>
+            <article class="explore-bin-card" data-color="yellow">
+              <span class="bin-swatch yellow large"></span>
+              <h3>Yellow – Plastic, Metal & Glass</h3>
+              <p>Bottles, cans, jars. Rinse first. Check local rules for mixed plastics.</p>
+            </article>
+            <article class="explore-bin-card" data-color="red">
+              <span class="bin-swatch red large"></span>
+              <h3>Red – Hazardous (B3)</h3>
+              <p>Batteries, chemicals, electronics, medical waste. Never mix with regular trash.</p>
+            </article>
+            <article class="explore-bin-card" data-color="grey">
+              <span class="bin-swatch grey large"></span>
+              <h3>Grey – Residual</h3>
+              <p>Non-recyclable mixed waste, heavily soiled items, composite materials.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2 class="section-title">Helpful Articles</h2>
+          <div class="articles">
+            <article class="article-card">
+              <h3>What is composite waste?</h3>
+              <p>Items made of multiple materials that are hard to separate (e.g. juice boxes, laminated packaging).</p>
+            </article>
+            <article class="article-card">
+              <h3>How to rinse packaging properly</h3>
+              <p>A quick rinse with cold water is usually enough. No need for soap. Dry before recycling.</p>
+            </article>
+            <article class="article-card">
+              <h3>Why batteries need special care</h3>
+              <p>They can leak toxic chemicals or cause fires. Always take them to designated collection points.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROFILE -->
+      <section id="screen-profile" class="screen" aria-label="Profile" hidden>
+        <div class="profile-stats">
+          <div class="stat-card">
+            <span class="stat-value" id="stat-scans">0</span>
+            <span class="stat-label">Scans</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-value" id="stat-saved">0</span>
+            <span class="stat-label">Saved</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-value" id="stat-corrections">0</span>
+            <span class="stat-label">Corrections</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2 class="section-title">AI Configuration</h2>
+          <div class="api-key-card">
+            <p class="api-key-desc">
+              To enable real waste detection, enter your free Google Gemini API key.
+              Without it, the app uses mock results.
+            </p>
+            <div class="api-key-status" id="api-key-status">
+              <span class="status-dot"></span>
+              <span id="api-status-text">Using mock mode</span>
+            </div>
+            <input type="password" id="api-key-input" class="api-key-input" placeholder="Paste Gemini API key here…" autocomplete="off">
+            <div class="api-key-actions">
+              <button id="btn-save-api-key" class="btn btn-primary btn-sm">Save Key</button>
+              <button id="btn-remove-api-key" class="btn btn-ghost btn-sm">Remove</button>
+            </div>
+            <p class="api-key-help">
+              Get a free key at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>
+            </p>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2 class="section-title">Settings</h2>
+          <div class="settings-list">
+            <button class="setting-item" id="btn-clear-history">
+              <span>Clear History</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+              </svg>
+            </button>
+            <button class="setting-item" id="btn-privacy">
+              <span>Privacy Policy</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18l6-6-6-6"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="section">
+          <p class="privacy-note">
+            Photos are processed only for analysis and are not stored permanently by default.
+            When using real AI, the image is sent to Google Gemini for classification only.
+            You can delete any saved scan at any time.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav" aria-label="Main navigation">
+      <button class="nav-item active" data-screen="scan" aria-label="Scan" aria-current="page">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+          <circle cx="12" cy="13" r="4"/>
+        </svg>
+        <span>Scan</span>
+      </button>
+      <button class="nav-item" data-screen="history" aria-label="History">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        <span>History</span>
+      </button>
+      <button class="nav-item" data-screen="explore" aria-label="Explore">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+        <span>Explore</span>
+      </button>
+      <button class="nav-item" data-screen="profile" aria-label="Profile">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span>Profile</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Correction Modal -->
+  <div id="correction-modal" class="modal" hidden aria-hidden="true">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content" role="dialog" aria-labelledby="correction-title">
+      <h2 id="correction-title">What's more accurate?</h2>
+      <div class="correction-options">
+        <button class="correction-option" data-category="Organic Waste" data-bin="Green">Organic Waste</button>
+        <button class="correction-option" data-category="Paper & Cardboard" data-bin="Blue">Paper & Cardboard</button>
+        <button class="correction-option" data-category="Plastic" data-bin="Yellow">Plastic</button>
+        <button class="correction-option" data-category="Glass" data-bin="Yellow">Glass</button>
+        <button class="correction-option" data-category="Metal" data-bin="Yellow">Metal</button>
+        <button class="correction-option" data-category="E-Waste" data-bin="Red">E-Waste</button>
+        <button class="correction-option" data-category="Hazardous Waste" data-bin="Red">Hazardous Waste</button>
+        <button class="correction-option" data-category="Textile" data-bin="Grey">Textile</button>
+        <button class="correction-option" data-category="Residual/Other" data-bin="Grey">Residual / Other</button>
+      </div>
+      <textarea id="correction-note" placeholder="Optional note…" rows="2"></textarea>
+      <div class="modal-actions">
+        <button id="btn-cancel-correction" class="btn btn-ghost">Cancel</button>
+        <button id="btn-submit-correction" class="btn btn-primary">Submit Correction</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden file input for gallery -->
+  <input type="file" id="gallery-input" accept="image/*" capture="environment" hidden>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/classification.js"></script>
+  <script src="js/camera.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
